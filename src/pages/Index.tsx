@@ -1,12 +1,188 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useEffect } from 'react';
+import { Navbar } from '@/components/Navbar';
+import { HeroSection } from '@/components/HeroSection';
+import { FilterSection } from '@/components/FilterSection';
+import { MovieGrid } from '@/components/MovieGrid';
+import { MovieModal } from '@/components/MovieModal';
+import { VideoPlayer } from '@/components/VideoPlayer';
+import { tmdbService, Movie, Genre } from '@/services/tmdb';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [featuredMovie, setFeaturedMovie] = useState<Movie | null>(null);
+  const [genres, setGenres] = useState<Genre[]>([]);
+  const [searchResults, setSearchResults] = useState<Movie[]>([]);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const [playingMovie, setPlayingMovie] = useState<Movie | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  
+  // Filters
+  const [selectedGenre, setSelectedGenre] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedSort, setSelectedSort] = useState('popularity.desc');
+  
+  const { toast } = useToast();
+
+  // Load initial data
+  useEffect(() => {
+    loadInitialData();
+  }, []);
+
+  // Load movies when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+    setMovies([]);
+    loadMovies(1);
+  }, [selectedGenre, selectedYear, selectedSort]);
+
+  const loadInitialData = async () => {
+    try {
+      setLoading(true);
+      const [genresResponse, moviesResponse] = await Promise.all([
+        tmdbService.getGenres(),
+        tmdbService.discoverMovies({ sort_by: selectedSort })
+      ]);
+
+      setGenres(genresResponse.genres);
+      setMovies(moviesResponse.results);
+      setTotalPages(moviesResponse.total_pages);
+      setFeaturedMovie(moviesResponse.results[0]);
+    } catch (error) {
+      console.error('Error loading initial data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load movies. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadMovies = async (page = 1, append = false) => {
+    try {
+      setLoading(true);
+      const response = await tmdbService.discoverMovies({
+        page,
+        with_genres: selectedGenre,
+        year: selectedYear,
+        sort_by: selectedSort,
+      });
+
+      if (append) {
+        setMovies(prev => [...prev, ...response.results]);
+      } else {
+        setMovies(response.results);
+        setFeaturedMovie(response.results[0]);
+      }
+      
+      setTotalPages(response.total_pages);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error('Error loading movies:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load movies. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = async (query: string) => {
+    if (query.length < 3) {
+      setSearchResults([]);
+      return;
+    }
+
+    try {
+      const response = await tmdbService.searchMovies(query);
+      setSearchResults(response.results);
+    } catch (error) {
+      console.error('Error searching movies:', error);
+    }
+  };
+
+  const handleMovieClick = (movie: Movie) => {
+    setSelectedMovie(movie);
+  };
+
+  const handlePlayMovie = (movie: Movie) => {
+    setPlayingMovie(movie);
+    setSelectedMovie(null);
+  };
+
+  const handleLoadMore = () => {
+    if (currentPage < totalPages) {
+      loadMovies(currentPage + 1, true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMovie(null);
+  };
+
+  const handleClosePlayer = () => {
+    setPlayingMovie(null);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen">
+      {/* Navigation */}
+      <Navbar
+        onSearch={handleSearch}
+        searchResults={searchResults}
+        onSelectMovie={handleMovieClick}
+      />
+
+      {/* Hero Section */}
+      {featuredMovie && (
+        <HeroSection
+          movie={featuredMovie}
+          onPlayMovie={handlePlayMovie}
+          onShowDetails={handleMovieClick}
+        />
+      )}
+
+      {/* Filters */}
+      <FilterSection
+        genres={genres}
+        selectedGenre={selectedGenre}
+        selectedYear={selectedYear}
+        selectedSort={selectedSort}
+        onGenreChange={setSelectedGenre}
+        onYearChange={setSelectedYear}
+        onSortChange={setSelectedSort}
+      />
+
+      {/* Movies Grid */}
+      <MovieGrid
+        movies={movies}
+        onMovieClick={handleMovieClick}
+        onLoadMore={handleLoadMore}
+        hasMore={currentPage < totalPages}
+        loading={loading}
+      />
+
+      {/* Movie Details Modal */}
+      <MovieModal
+        movie={selectedMovie}
+        isOpen={!!selectedMovie}
+        onClose={handleCloseModal}
+        onPlay={handlePlayMovie}
+      />
+
+      {/* Video Player */}
+      <VideoPlayer
+        movieId={playingMovie?.id || 0}
+        movieTitle={playingMovie?.title || ''}
+        isOpen={!!playingMovie}
+        onClose={handleClosePlayer}
+      />
     </div>
   );
 };
