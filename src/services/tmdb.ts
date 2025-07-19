@@ -64,13 +64,23 @@ class TMDBService {
     with_genres?: string;
     year?: string;
     sort_by?: string;
+    include_adult?: string;
+    with_original_language?: string;
   } = {}): Promise<TMDBResponse<Movie>> {
     const queryParams: Record<string, any> = {
       page: params.page || 1,
-      include_adult: true,
       include_video: true,
       language: 'en-US',
     };
+
+    // Handle adult content filter
+    if (params.include_adult === 'true') {
+      queryParams.include_adult = true;
+    } else if (params.include_adult === 'false') {
+      queryParams.include_adult = false;
+    } else {
+      queryParams.include_adult = true; // default to include all
+    }
 
     if (params.with_genres) {
       queryParams.with_genres = params.with_genres;
@@ -84,7 +94,15 @@ class TMDBService {
       queryParams.sort_by = params.sort_by;
     }
 
+    if (params.with_original_language) {
+      queryParams.with_original_language = params.with_original_language;
+    }
+
     return this.fetchFromTMDB('/discover/movie', queryParams);
+  }
+
+  async getLanguages(): Promise<any[]> {
+    return this.fetchFromTMDB('/configuration/languages');
   }
 
   async searchMovies(query: string, page = 1): Promise<TMDBResponse<Movie>> {

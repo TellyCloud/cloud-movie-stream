@@ -12,6 +12,7 @@ const Index = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [featuredMovie, setFeaturedMovie] = useState<Movie | null>(null);
   const [genres, setGenres] = useState<Genre[]>([]);
+  const [languages, setLanguages] = useState<any[]>([]);
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [playingMovie, setPlayingMovie] = useState<Movie | null>(null);
@@ -23,6 +24,8 @@ const Index = () => {
   const [selectedGenre, setSelectedGenre] = useState('all');
   const [selectedYear, setSelectedYear] = useState('all');
   const [selectedSort, setSelectedSort] = useState('popularity.desc');
+  const [selectedAdult, setSelectedAdult] = useState('all');
+  const [selectedLanguage, setSelectedLanguage] = useState('all');
   
   const { toast } = useToast();
 
@@ -36,17 +39,19 @@ const Index = () => {
     setCurrentPage(1);
     setMovies([]);
     loadMovies(1);
-  }, [selectedGenre, selectedYear, selectedSort]);
+  }, [selectedGenre, selectedYear, selectedSort, selectedAdult, selectedLanguage]);
 
   const loadInitialData = async () => {
     try {
       setLoading(true);
-      const [genresResponse, moviesResponse] = await Promise.all([
+      const [genresResponse, languagesResponse, moviesResponse] = await Promise.all([
         tmdbService.getGenres(),
+        tmdbService.getLanguages(),
         tmdbService.discoverMovies({ sort_by: selectedSort })
       ]);
 
       setGenres(genresResponse.genres);
+      setLanguages(languagesResponse);
       setMovies(moviesResponse.results);
       setTotalPages(moviesResponse.total_pages);
       setFeaturedMovie(moviesResponse.results[0]);
@@ -70,6 +75,8 @@ const Index = () => {
         with_genres: selectedGenre === 'all' ? '' : selectedGenre,
         year: selectedYear === 'all' ? '' : selectedYear,
         sort_by: selectedSort,
+        include_adult: selectedAdult === 'all' ? '' : selectedAdult,
+        with_original_language: selectedLanguage === 'all' ? '' : selectedLanguage,
       });
 
       if (append) {
@@ -151,12 +158,17 @@ const Index = () => {
       {/* Filters */}
       <FilterSection
         genres={genres}
+        languages={languages}
         selectedGenre={selectedGenre}
         selectedYear={selectedYear}
         selectedSort={selectedSort}
+        selectedAdult={selectedAdult}
+        selectedLanguage={selectedLanguage}
         onGenreChange={setSelectedGenre}
         onYearChange={setSelectedYear}
         onSortChange={setSelectedSort}
+        onAdultChange={setSelectedAdult}
+        onLanguageChange={setSelectedLanguage}
       />
 
       {/* Movies Grid */}
