@@ -34,7 +34,7 @@ export function FilterSection({
                 <SelectValue placeholder="All Genres" />
               </SelectTrigger>
               <SelectContent className="bg-card border-border">
-                <SelectItem value="">All Genres</SelectItem>
+                <SelectItem value="all">All Genres</SelectItem>
                 {genres.map((genre) => (
                   <SelectItem key={genre.id} value={genre.id.toString()}>
                     {genre.name}
@@ -52,7 +52,7 @@ export function FilterSection({
                 <SelectValue placeholder="All Years" />
               </SelectTrigger>
               <SelectContent className="bg-card border-border max-h-60">
-                <SelectItem value="">All Years</SelectItem>
+                <SelectItem value="all">All Years</SelectItem>
                 {years.slice(0, 30).map((year) => (
                   <SelectItem key={year} value={year.toString()}>
                     {year}

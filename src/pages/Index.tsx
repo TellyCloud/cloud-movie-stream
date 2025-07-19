@@ -20,8 +20,8 @@ const Index = () => {
   const [totalPages, setTotalPages] = useState(0);
   
   // Filters
-  const [selectedGenre, setSelectedGenre] = useState('');
-  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('all');
+  const [selectedYear, setSelectedYear] = useState('all');
   const [selectedSort, setSelectedSort] = useState('popularity.desc');
   
   const { toast } = useToast();
@@ -67,8 +67,8 @@ const Index = () => {
       setLoading(true);
       const response = await tmdbService.discoverMovies({
         page,
-        with_genres: selectedGenre,
-        year: selectedYear,
+        with_genres: selectedGenre === 'all' ? '' : selectedGenre,
+        year: selectedYear === 'all' ? '' : selectedYear,
         sort_by: selectedSort,
       });
 
