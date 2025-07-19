@@ -75,7 +75,7 @@ const Index = () => {
         with_genres: selectedGenre === 'all' ? '' : selectedGenre,
         year: selectedYear === 'all' ? '' : selectedYear,
         sort_by: selectedSort,
-        include_adult: selectedAdult === 'all' ? '' : selectedAdult,
+        adult_filter: selectedAdult === 'all' ? '' : selectedAdult,
         with_original_language: selectedLanguage === 'all' ? '' : selectedLanguage,
       });
 

@@ -64,7 +64,7 @@ class TMDBService {
     with_genres?: string;
     year?: string;
     sort_by?: string;
-    include_adult?: string;
+    adult_filter?: string;
     with_original_language?: string;
   } = {}): Promise<TMDBResponse<Movie>> {
     const queryParams: Record<string, any> = {
@@ -74,16 +74,19 @@ class TMDBService {
     };
 
     // Handle adult content filter
-    if (params.include_adult === 'true') {
+    if (params.adult_filter === 'true') {
+      // Show only adult content - we'll filter after API call
       queryParams.include_adult = true;
-    } else if (params.include_adult === 'false') {
+    } else if (params.adult_filter === 'false') {
+      // Show only family-friendly content
       queryParams.include_adult = false;
     } else {
-      queryParams.include_adult = true; // default to include all
+      // Show all content
+      queryParams.include_adult = true;
     }
 
     console.log('TMDB API call params:', {
-      include_adult: params.include_adult,
+      adult_filter: params.adult_filter,
       computed_include_adult: queryParams.include_adult,
       with_genres: params.with_genres,
       year: params.year,
@@ -106,7 +109,14 @@ class TMDBService {
       queryParams.with_original_language = params.with_original_language;
     }
 
-    return this.fetchFromTMDB('/discover/movie', queryParams);
+    const response = await this.fetchFromTMDB<TMDBResponse<Movie>>('/discover/movie', queryParams);
+    
+    // Filter results for adult-only content if requested
+    if (params.adult_filter === 'true') {
+      response.results = response.results.filter(movie => movie.adult === true);
+    }
+    
+    return response;
   }
 
   async getLanguages(): Promise<any[]> {
