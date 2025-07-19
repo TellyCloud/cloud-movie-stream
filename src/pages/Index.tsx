@@ -175,6 +175,7 @@ const Index = () => {
       <MovieGrid
         movies={movies}
         onMovieClick={handleMovieClick}
+        onPlayMovie={handlePlayMovie}
         onLoadMore={handleLoadMore}
         hasMore={currentPage < totalPages}
         loading={loading}

@@ -82,6 +82,14 @@ class TMDBService {
       queryParams.include_adult = true; // default to include all
     }
 
+    console.log('TMDB API call params:', {
+      include_adult: params.include_adult,
+      computed_include_adult: queryParams.include_adult,
+      with_genres: params.with_genres,
+      year: params.year,
+      with_original_language: params.with_original_language
+    });
+
     if (params.with_genres) {
       queryParams.with_genres = params.with_genres;
     }

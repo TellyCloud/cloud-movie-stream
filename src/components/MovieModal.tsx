@@ -1,6 +1,6 @@
 import { X, Play, Star, Calendar, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 interface MovieModalProps {
   movie: any;
@@ -15,6 +15,10 @@ export function MovieModal({ movie, isOpen, onClose, onPlay }: MovieModalProps) 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl p-0 bg-card border-border overflow-hidden">
+        <DialogHeader className="sr-only">
+          <DialogTitle>{movie.title}</DialogTitle>
+          <DialogDescription>Movie details and streaming options</DialogDescription>
+        </DialogHeader>
         <div className="relative">
           {/* Close Button */}
           <Button

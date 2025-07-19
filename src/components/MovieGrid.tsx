@@ -5,12 +5,13 @@ import { Loader2 } from 'lucide-react';
 interface MovieGridProps {
   movies: any[];
   onMovieClick: (movie: any) => void;
+  onPlayMovie: (movie: any) => void;
   onLoadMore: () => void;
   hasMore: boolean;
   loading: boolean;
 }
 
-export function MovieGrid({ movies, onMovieClick, onLoadMore, hasMore, loading }: MovieGridProps) {
+export function MovieGrid({ movies, onMovieClick, onPlayMovie, onLoadMore, hasMore, loading }: MovieGridProps) {
   if (movies.length === 0 && !loading) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
@@ -30,7 +31,7 @@ export function MovieGrid({ movies, onMovieClick, onLoadMore, hasMore, loading }
           key={movie.id}
           movie={movie}
           onClick={onMovieClick}
-          onPlay={onMovieClick}
+          onPlay={onPlayMovie}
         />
       ))}
         </div>
