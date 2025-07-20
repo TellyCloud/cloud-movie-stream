@@ -17,13 +17,12 @@ export function VideoPlayer({ movieId, movieTitle, isOpen, onClose }: VideoPlaye
 
   // Multiple video sources for better availability
   const videoSources = [
-    `https://vidsrc.xyz/embed/movie/${movieId}`,
+    `https://vidsrc.xyz/embed/movie?tmdb=${movieId}`,
+    `https://vidsrc.in/embed/movie?tmdb=${movieId}`,
+    `https://vidsrc.pm/embed/movie?tmdb=${movieId}`, 
+    `https://vidsrc.net/embed/movie?tmdb=${movieId}`,
     `https://www.2embed.cc/embed/${movieId}`,
-    `https://vidsrc.me/embed/movie?tmdb=${movieId}`,
-    `https://vidsrc.net/embed/movie/${movieId}`,
-    `https://embedsu.com/embed/movie/${movieId}`,
-    `https://multiembed.mov/directstream.php?video_id=${movieId}&tmdb=1`,
-    `https://vidsrc.to/embed/movie/${movieId}`
+    `https://multiembed.mov/directstream.php?video_id=${movieId}&tmdb=1`
   ];
 
   const handleError = () => {
