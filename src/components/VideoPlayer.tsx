@@ -17,11 +17,13 @@ export function VideoPlayer({ movieId, movieTitle, isOpen, onClose }: VideoPlaye
 
   // Multiple video sources for better availability
   const videoSources = [
-    `https://vidsrc.pro/embed/movie/${movieId}`,
-    `https://embedsu.com/embed/movie/${movieId}`,
+    `https://vidsrc.xyz/embed/movie/${movieId}`,
     `https://www.2embed.cc/embed/${movieId}`,
     `https://vidsrc.me/embed/movie?tmdb=${movieId}`,
-    `https://multiembed.mov/directstream.php?video_id=${movieId}&tmdb=1`
+    `https://vidsrc.net/embed/movie/${movieId}`,
+    `https://embedsu.com/embed/movie/${movieId}`,
+    `https://multiembed.mov/directstream.php?video_id=${movieId}&tmdb=1`,
+    `https://vidsrc.to/embed/movie/${movieId}`
   ];
 
   const handleError = () => {
@@ -78,9 +80,11 @@ export function VideoPlayer({ movieId, movieTitle, isOpen, onClose }: VideoPlaye
             title={movieTitle}
             className="w-full h-full border-0"
             allowFullScreen
-            allow="autoplay; fullscreen; picture-in-picture"
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation"
             onError={handleError}
             onLoad={() => setHasError(false)}
+            referrerPolicy="no-referrer-when-downgrade"
           />
         )}
       </div>
