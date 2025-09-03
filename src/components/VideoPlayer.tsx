@@ -87,10 +87,8 @@ export function VideoPlayer({ movieId, movieTitle, isOpen, onClose }: VideoPlaye
             className="w-full h-full border-0"
             allowFullScreen
             allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer"
-            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation"
             onError={handleError}
             onLoad={() => setHasError(false)}
-            referrerPolicy="no-referrer-when-downgrade"
           />
         )}
       </div>
