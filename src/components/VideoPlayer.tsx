@@ -25,8 +25,6 @@ export function VideoPlayer({ movieId, movieTitle, isOpen, onClose }: VideoPlaye
   const controlsTimeoutRef = useRef<NodeJS.Timeout>();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  if (!isOpen) return null;
-
   const videoSources = [
     `https://autoembed.co/movie/tmdb/${movieId}`,
     `https://dbgo.fun/imdb.php?id=${movieId}`,
@@ -119,6 +117,8 @@ export function VideoPlayer({ movieId, movieTitle, isOpen, onClose }: VideoPlaye
     setVolume(newVolume);
     setIsMuted(newVolume === 0);
   };
+
+  if (!isOpen) return null;
 
   return (
     <div 
