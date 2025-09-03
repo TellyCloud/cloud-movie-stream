@@ -45,11 +45,12 @@ export function VideoPlayer({ movieId, movieTitle, isOpen, onClose }: VideoPlaye
 
   // HLS video sources - these should be actual HLS streams
   const videoSources = [
-    // For demo purposes, using a sample HLS stream
-    // In production, you'd fetch the actual HLS URL for the movie
-    `https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8`,
-    `https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8`,
-    `https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8`
+    `https://autoembed.co/movie/tmdb/${movieId}`,
+    `https://dbgo.fun/imdb.php?id=${movieId}`,
+    `https://player.smashy.stream/movie/${movieId}`,
+    `https://embed.su/embed/movie/${movieId}`,
+    `https://moviesapi.club/movie/${movieId}`,
+    `https://vidsrc.xyz/embed/movie?tmdb=${movieId}`,
   ];
 
   // Initialize Video.js player
