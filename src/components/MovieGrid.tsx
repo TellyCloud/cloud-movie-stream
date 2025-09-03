@@ -1,6 +1,8 @@
 import { MovieCard } from './MovieCard';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
 
 interface MovieGridProps {
   movies: any[];
@@ -12,6 +14,19 @@ interface MovieGridProps {
 }
 
 export function MovieGrid({ movies, onMovieClick, onPlayMovie, onLoadMore, hasMore, loading }: MovieGridProps) {
+  // Infinite scroll setup
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  });
+
+  // Auto-load more when scroll sentinel comes into view
+  useEffect(() => {
+    if (inView && hasMore && !loading) {
+      onLoadMore();
+    }
+  }, [inView, hasMore, loading, onLoadMore]);
+
   if (movies.length === 0 && !loading) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
@@ -43,17 +58,19 @@ export function MovieGrid({ movies, onMovieClick, onPlayMovie, onLoadMore, hasMo
           </div>
         )}
 
-        {/* Load More Button */}
-        {hasMore && !loading && (
-          <div className="flex justify-center mt-12">
-            <Button
-              onClick={onLoadMore}
-              size="lg"
-              variant="outline"
-              className="border-border/50 hover:border-primary/50 hover:bg-primary/10"
-            >
-              Load More Movies
-            </Button>
+        {/* Infinite Scroll Sentinel */}
+        {hasMore && (
+          <div ref={ref} className="flex justify-center mt-12 pb-8">
+            {!loading && (
+              <Button
+                onClick={onLoadMore}
+                size="lg"
+                variant="outline"
+                className="border-border/50 hover:border-primary/50 hover:bg-primary/10"
+              >
+                Load More Movies
+              </Button>
+            )}
           </div>
         )}
       </div>

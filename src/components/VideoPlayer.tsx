@@ -15,10 +15,10 @@ export function VideoPlayer({ movieId, movieTitle, isOpen, onClose }: VideoPlaye
 
   if (!isOpen) return null;
 
-  // Multiple video sources for better availability
+  // Multiple video sources for better availability - Server 2 is now Server 1
   const videoSources = [
-    `https://autoembed.co/movie/tmdb/${movieId}`,
-    `https://dbgo.fun/imdb.php?id=${movieId}`,
+    `https://dbgo.fun/imdb.php?id=${movieId}`, // SERVER 1 (was server 2)
+    `https://autoembed.co/movie/tmdb/${movieId}`, // SERVER 2 (was server 1)
     `https://player.smashy.stream/movie/${movieId}`,
     `https://embed.su/embed/movie/${movieId}`,
     `https://moviesapi.club/movie/${movieId}`,
