@@ -17,12 +17,12 @@ export function VideoPlayer({ movieId, movieTitle, isOpen, onClose }: VideoPlaye
 
   // Multiple video sources for better availability - Server 2 is now Server 1
   const videoSources = [
-    `https://dbgo.fun/imdb.php?id=${movieId}`, // SERVER 1 (was server 2)
-    `https://autoembed.co/movie/tmdb/${movieId}`, // SERVER 2 (was server 1)
-    `https://player.smashy.stream/movie/${movieId}`,
-    `https://embed.su/embed/movie/${movieId}`,
-    `https://moviesapi.club/movie/${movieId}`,
-    `https://vidsrc.xyz/embed/movie?tmdb=${movieId}`
+    `https://vidsrc.pro/embed/movie/${movieId}`, // SERVER 1 - Most reliable
+    `https://vidsrc.cc/v2/embed/movie/${movieId}`, // SERVER 2 - Good backup
+    `https://embedsu.net/embed/movie/${movieId}`, // SERVER 3
+    `https://multiembed.mov/directstream.php?video_id=${movieId}&tmdb=1`, // SERVER 4
+    `https://vidsrc.xyz/embed/movie?tmdb=${movieId}`, // SERVER 5
+    `https://www.2embed.cc/embed/${movieId}` // SERVER 6
   ];
 
   console.log('VideoPlayer - Movie ID:', movieId);
