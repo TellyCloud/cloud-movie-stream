@@ -46,10 +46,8 @@ export function VideoPlayer({ movieId, movieTitle, isOpen, onClose }: VideoPlaye
   // HLS video sources - these should be actual HLS streams
   const videoSources = [
     `https://autoembed.co/movie/tmdb/${movieId}`,
-    `https://dbgo.fun/imdb.php?id=${movieId}`,
     `https://player.smashy.stream/movie/${movieId}`,
     `https://embed.su/embed/movie/${movieId}`,
-    `https://moviesapi.club/movie/${movieId}`,
     `https://vidsrc.xyz/embed/movie?tmdb=${movieId}`,
   ];
 
