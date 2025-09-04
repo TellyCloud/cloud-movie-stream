@@ -24,7 +24,7 @@ const Index = () => {
   const [selectedGenre, setSelectedGenre] = useState('all');
   const [selectedYear, setSelectedYear] = useState('all');
   const [selectedSort, setSelectedSort] = useState('popularity.desc');
-  const [selectedAdult, setSelectedAdult] = useState('all');
+  const [selectedAdult, setSelectedAdult] = useState('false');
   const [selectedLanguage, setSelectedLanguage] = useState('all');
   
   const { toast } = useToast();
@@ -47,7 +47,10 @@ const Index = () => {
       const [genresResponse, languagesResponse, moviesResponse] = await Promise.all([
         tmdbService.getGenres(),
         tmdbService.getLanguages(),
-        tmdbService.discoverMovies({ sort_by: selectedSort })
+        tmdbService.discoverMovies({
+          sort_by: selectedSort,
+          adult_filter: 'false'
+        })
       ]);
 
       setGenres(genresResponse.genres);
