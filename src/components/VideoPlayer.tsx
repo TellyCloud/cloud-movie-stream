@@ -427,7 +427,8 @@ export function VideoPlayer({ movieId, movieTitle, isOpen, onClose }: VideoPlaye
 
   const skipForward = useCallback(() => {
     if (!canPlayDirectly || !videoRef.current) return;
-    const video = videoRef.current    video.currentTime = Math.min(duration, video.currentTime + SKIP_DURATION);
+    const video = videoRef.current;
+    video.currentTime = Math.min(duration, video.currentTime + SKIP_DURATION);
   }, [canPlayDirectly, duration]);
 
   const skipBackward = useCallback(() => {
