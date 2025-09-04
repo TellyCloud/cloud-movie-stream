@@ -1,16 +1,13 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "dist/**",
-      "use": "@vercel/static"
-    }
+    { "src": "dist/**", "use": "@vercel/static" }
+  ],
+  "rewrites": [
+    { "source": "/tmdb/(.*)", "destination": "https://api.themoviedb.org/3/$1" }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",

@@ -81,3 +81,9 @@ export function getRandomProxy(): ProxyServer | null {
   const randomIndex = Math.floor(Math.random() * workingProxies.length);
   return workingProxies[randomIndex];
 }
+
+// API base for TMDB via app proxy
+export const API_PROXY_BASE = '/tmdb';
+export function getApiBaseUrl(): string {
+  return API_PROXY_BASE;
+}

@@ -8,6 +8,14 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      "/tmdb": {
+        target: "https://api.themoviedb.org/3",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/tmdb/, ""),
+        secure: true,
+      },
+    },
   },
   plugins: [
     react(),

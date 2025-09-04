@@ -1,5 +1,6 @@
+import { getApiBaseUrl } from './proxy';
 const API_KEY = '15d2ea6d0dc1d476efbca3eba2b9bbfb';
-const BASE_URL = 'https://api.themoviedb.org/3';
+const BASE_URL = getApiBaseUrl();
 
 export interface Movie {
   id: number;
