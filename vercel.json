@@ -1,5 +1,25 @@
 {
   "version": 2,
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.(js|css|woff|woff2|ttf|eot|ico|png|jpg|jpeg|gif|svg|webp))",
+      "headers": [
+        {
+          "key": "Cache-Control", 
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/tmdb/(.*)", "destination": "https://api.themoviedb.org/3/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
