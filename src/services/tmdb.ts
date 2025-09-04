@@ -31,7 +31,8 @@ export interface TMDBResponse<T> {
 
 class TMDBService {
   private async fetchFromTMDB<T>(endpoint: string, params: Record<string, any> = {}): Promise<T> {
-    const url = new URL(`${BASE_URL}${endpoint}`);
+    const base = BASE_URL.startsWith('http') ? BASE_URL : `${window.location.origin}${BASE_URL}`;
+    const url = new URL(`${base}${endpoint}`);
     url.searchParams.append('api_key', API_KEY);
     
     Object.entries(params).forEach(([key, value]) => {
