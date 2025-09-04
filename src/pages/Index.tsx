@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { HeroSection } from '@/components/HeroSection';
 import { FilterSection } from '@/components/FilterSection';
 import { MovieGrid } from '@/components/MovieGrid';
-import { MovieModal } from '@/components/MovieModal';
-import { VideoPlayer } from '@/components/VideoPlayer';
 import { tmdbService, Movie, Genre } from '@/services/tmdb';
 import { useToast } from '@/hooks/use-toast';
+
+// Lazy load components that are only used on user interaction
+const MovieModal = lazy(() => import('@/components/MovieModal').then(m => ({ default: m.MovieModal })));
+const VideoPlayer = lazy(() => import('@/components/VideoPlayer').then(m => ({ default: m.VideoPlayer })));
 
 const Index = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -185,20 +187,24 @@ const Index = () => {
       />
 
       {/* Movie Details Modal */}
-      <MovieModal
-        movie={selectedMovie}
-        isOpen={!!selectedMovie}
-        onClose={handleCloseModal}
-        onPlay={handlePlayMovie}
-      />
+      <Suspense fallback={null}>
+        <MovieModal
+          movie={selectedMovie}
+          isOpen={!!selectedMovie}
+          onClose={handleCloseModal}
+          onPlay={handlePlayMovie}
+        />
+      </Suspense>
 
       {/* Video Player */}
-      <VideoPlayer
-        movieId={playingMovie?.id || 0}
-        movieTitle={playingMovie?.title || ''}
-        isOpen={!!playingMovie}
-        onClose={handleClosePlayer}
-      />
+      <Suspense fallback={null}>
+        <VideoPlayer
+          movieId={playingMovie?.id || 0}
+          movieTitle={playingMovie?.title || ''}
+          isOpen={!!playingMovie}
+          onClose={handleClosePlayer}
+        />
+      </Suspense>
     </div>
   );
 };
