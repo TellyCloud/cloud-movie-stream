@@ -2,7 +2,7 @@ import { useState, useEffect, Suspense, lazy } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { HeroSection } from '@/components/HeroSection';
 import { FilterSection } from '@/components/FilterSection';
-import { MovieGrid } from '@/components/MovieGrid';
+import { MovieCategoryCard } from '@/components/MovieCategoryCard';
 import { SecurityNotice } from '@/components/SecurityNotice';
 import { tmdbService, Movie, Genre } from '@/services/tmdb';
 import { useToast } from '@/hooks/use-toast';
@@ -191,15 +191,36 @@ const Index = () => {
         <SecurityNotice />
       </div>
 
-      {/* Movies Grid */}
-      <MovieGrid
-        movies={movies}
-        onMovieClick={handleMovieClick}
-        onPlayMovie={handlePlayMovie}
-        onLoadMore={handleLoadMore}
-        hasMore={currentPage < totalPages}
-        loading={loading}
-      />
+      {/* Movie Categories */}
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        <MovieCategoryCard
+          title="Trending Movies"
+          category="popular"
+          onMovieClick={handleMovieClick}
+          onPlayMovie={handlePlayMovie}
+        />
+        
+        <MovieCategoryCard
+          title="Top Rated Movies"
+          category="top_rated"
+          onMovieClick={handleMovieClick}
+          onPlayMovie={handlePlayMovie}
+        />
+        
+        <MovieCategoryCard
+          title="Latest Releases"
+          category="latest"
+          onMovieClick={handleMovieClick}
+          onPlayMovie={handlePlayMovie}
+        />
+        
+        <MovieCategoryCard
+          title="Upcoming Movies"
+          category="upcoming"
+          onMovieClick={handleMovieClick}
+          onPlayMovie={handlePlayMovie}
+        />
+      </div>
 
       {/* Movie Details Modal */}
       <Suspense fallback={null}>

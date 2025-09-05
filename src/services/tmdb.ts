@@ -84,6 +84,10 @@ class TMDBService {
     return this.fetchFromTMDB('/movie/now_playing', { page });
   }
 
+  async getUpcomingMovies(page = 1): Promise<TMDBResponse<Movie>> {
+    return this.fetchFromTMDB('/movie/upcoming', { page });
+  }
+
   async discoverMovies(params: {
     page?: number;
     with_genres?: string;
