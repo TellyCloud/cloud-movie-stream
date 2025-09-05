@@ -196,6 +196,11 @@ const Index = () => {
         <MovieCategoryCard
           title="Trending Movies"
           category="popular"
+          selectedGenre={selectedGenre}
+          selectedYear={selectedYear}
+          selectedSort={selectedSort}
+          selectedAdult={selectedAdult}
+          selectedLanguage={selectedLanguage}
           onMovieClick={handleMovieClick}
           onPlayMovie={handlePlayMovie}
         />
@@ -203,6 +208,11 @@ const Index = () => {
         <MovieCategoryCard
           title="Top Rated Movies"
           category="top_rated"
+          selectedGenre={selectedGenre}
+          selectedYear={selectedYear}
+          selectedSort={selectedSort}
+          selectedAdult={selectedAdult}
+          selectedLanguage={selectedLanguage}
           onMovieClick={handleMovieClick}
           onPlayMovie={handlePlayMovie}
         />
@@ -210,6 +220,11 @@ const Index = () => {
         <MovieCategoryCard
           title="Latest Releases"
           category="latest"
+          selectedGenre={selectedGenre}
+          selectedYear={selectedYear}
+          selectedSort={selectedSort}
+          selectedAdult={selectedAdult}
+          selectedLanguage={selectedLanguage}
           onMovieClick={handleMovieClick}
           onPlayMovie={handlePlayMovie}
         />
@@ -217,6 +232,11 @@ const Index = () => {
         <MovieCategoryCard
           title="Upcoming Movies"
           category="upcoming"
+          selectedGenre={selectedGenre}
+          selectedYear={selectedYear}
+          selectedSort={selectedSort}
+          selectedAdult={selectedAdult}
+          selectedLanguage={selectedLanguage}
           onMovieClick={handleMovieClick}
           onPlayMovie={handlePlayMovie}
         />
