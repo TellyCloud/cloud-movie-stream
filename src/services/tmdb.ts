@@ -1,6 +1,13 @@
 import { getApiBaseUrl } from './proxy';
-const API_KEY = '15d2ea6d0dc1d476efbca3eba2b9bbfb';
+import { validateSearchQuery, validateId, validateYear, validateSortBy, sanitizeMovieData, RateLimiter } from '@/lib/security';
+import { env } from '@/lib/env';
+
+// Use environment variable for API key security
+const API_KEY = env.TMDB_API_KEY;
 const BASE_URL = getApiBaseUrl();
+
+// Rate limiter to prevent API abuse
+const rateLimiter = new RateLimiter(100, 60000);
 
 export interface Movie {
   id: number;
@@ -31,6 +38,12 @@ export interface TMDBResponse<T> {
 
 class TMDBService {
   private async fetchFromTMDB<T>(endpoint: string, params: Record<string, any> = {}): Promise<T> {
+    // Rate limiting check
+    const clientId = 'global'; // In a real app, this could be user-specific
+    if (!rateLimiter.isAllowed(clientId)) {
+      throw new Error('Rate limit exceeded. Please try again later.');
+    }
+
     const base = BASE_URL.startsWith('http') ? BASE_URL : `${window.location.origin}${BASE_URL}`;
     const url = new URL(`${base}${endpoint}`);
     url.searchParams.append('api_key', API_KEY);
@@ -43,10 +56,20 @@ class TMDBService {
 
     const response = await fetch(url.toString());
     if (!response.ok) {
-      throw new Error(`TMDB API error: ${response.statusText}`);
+      throw new Error(`TMDB API error: ${response.status} ${response.statusText}`);
     }
     
-    return response.json();
+    const data = await response.json();
+    
+    // Sanitize movie data if the response contains movie results
+    if (data.results && Array.isArray(data.results)) {
+      data.results = data.results.map(sanitizeMovieData).filter(Boolean);
+    } else if (data.title || data.overview) {
+      // Single movie response
+      return sanitizeMovieData(data);
+    }
+    
+    return data;
   }
 
   async getPopularMovies(page = 1): Promise<TMDBResponse<Movie>> {
@@ -69,8 +92,13 @@ class TMDBService {
     adult_filter?: string;
     with_original_language?: string;
   } = {}): Promise<TMDBResponse<Movie>> {
+    // Validate and sanitize input parameters
+    const page = Math.max(1, Math.min(1000, parseInt(String(params.page || 1), 10) || 1));
+    const validatedYear = validateYear(params.year);
+    const validatedSortBy = validateSortBy(params.sort_by);
+    
     const queryParams: Record<string, any> = {
-      page: params.page || 1,
+      page,
       include_video: true,
       language: 'en-US',
     };
@@ -87,27 +115,19 @@ class TMDBService {
       queryParams.include_adult = true;
     }
 
-    console.log('TMDB API call params:', {
-      adult_filter: params.adult_filter,
-      computed_include_adult: queryParams.include_adult,
-      with_genres: params.with_genres,
-      year: params.year,
-      with_original_language: params.with_original_language
-    });
-
-    if (params.with_genres) {
+    if (params.with_genres && /^\d+(,\d+)*$/.test(params.with_genres)) {
       queryParams.with_genres = params.with_genres;
     }
 
-    if (params.year) {
-      queryParams.year = params.year;
+    if (validatedYear) {
+      queryParams.year = validatedYear;
     }
 
-    if (params.sort_by) {
-      queryParams.sort_by = params.sort_by;
+    if (validatedSortBy) {
+      queryParams.sort_by = validatedSortBy;
     }
 
-    if (params.with_original_language) {
+    if (params.with_original_language && /^[a-z]{2}(-[A-Z]{2})?$/.test(params.with_original_language)) {
       queryParams.with_original_language = params.with_original_language;
     }
 
@@ -126,9 +146,17 @@ class TMDBService {
   }
 
   async searchMovies(query: string, page = 1): Promise<TMDBResponse<Movie>> {
+    // Validate and sanitize search query
+    const sanitizedQuery = validateSearchQuery(query);
+    if (!sanitizedQuery) {
+      throw new Error('Invalid search query');
+    }
+    
+    const validPage = Math.max(1, Math.min(1000, parseInt(String(page), 10) || 1));
+    
     return this.fetchFromTMDB('/search/movie', {
-      query,
-      page,
+      query: sanitizedQuery,
+      page: validPage,
       include_adult: true,
       language: 'en-US',
     });
@@ -141,7 +169,12 @@ class TMDBService {
   }
 
   async getMovieDetails(movieId: number): Promise<Movie> {
-    return this.fetchFromTMDB(`/movie/${movieId}`, {
+    const validId = validateId(movieId);
+    if (!validId) {
+      throw new Error('Invalid movie ID');
+    }
+    
+    return this.fetchFromTMDB(`/movie/${validId}`, {
       language: 'en-US',
     });
   }

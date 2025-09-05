@@ -3,8 +3,10 @@ import { Navbar } from '@/components/Navbar';
 import { HeroSection } from '@/components/HeroSection';
 import { FilterSection } from '@/components/FilterSection';
 import { MovieGrid } from '@/components/MovieGrid';
+import { SecurityNotice } from '@/components/SecurityNotice';
 import { tmdbService, Movie, Genre } from '@/services/tmdb';
 import { useToast } from '@/hooks/use-toast';
+import { handleSecureError } from '@/lib/error-handler';
 
 // Lazy load components that are only used on user interaction
 const MovieModal = lazy(() => import('@/components/MovieModal').then(m => ({ default: m.MovieModal })));
@@ -62,9 +64,10 @@ const Index = () => {
       setFeaturedMovie(moviesResponse.results[0]);
     } catch (error) {
       console.error('Error loading initial data:', error);
+      const errorMessage = handleSecureError(error);
       toast({
         title: "Error",
-        description: "Failed to load movies. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -95,9 +98,10 @@ const Index = () => {
       setCurrentPage(page);
     } catch (error) {
       console.error('Error loading movies:', error);
+      const errorMessage = handleSecureError(error);
       toast({
         title: "Error",
-        description: "Failed to load movies. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -116,6 +120,12 @@ const Index = () => {
       setSearchResults(response.results);
     } catch (error) {
       console.error('Error searching movies:', error);
+      const errorMessage = handleSecureError(error);
+      toast({
+        title: "Search Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
     }
   };
 
@@ -175,6 +185,11 @@ const Index = () => {
         onAdultChange={setSelectedAdult}
         onLanguageChange={setSelectedLanguage}
       />
+
+      {/* Security Notice */}
+      <div className="container mx-auto px-4 py-2">
+        <SecurityNotice />
+      </div>
 
       {/* Movies Grid */}
       <MovieGrid
