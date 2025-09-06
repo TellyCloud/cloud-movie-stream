@@ -1,5 +1,5 @@
 import { Play, Info, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
 import heroBackground from '@/assets/hero-background.jpg';
 
 interface HeroSectionProps {
@@ -56,25 +56,26 @@ export function HeroSection({ movie, onPlayMovie, onShowDetails }: HeroSectionPr
           
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button 
-              size="lg" 
-              className="btn-primary text-lg px-8 py-6"
+            <EnhancedButton 
+              size="xl" 
+              variant="premium"
+              className="text-lg px-8 py-6"
               onClick={() => movie ? onPlayMovie(movie) : undefined}
             >
               <Play className="w-5 h-5 mr-2 fill-current" />
               {movie ? 'Watch Now' : 'Explore Movies'}
-            </Button>
+            </EnhancedButton>
             
             {movie && (
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-6 border-border/50 hover:border-primary/50 hover:bg-primary/10"
+              <EnhancedButton 
+                size="xl" 
+                variant="glass"
+                className="text-lg px-8 py-6"
                 onClick={() => onShowDetails(movie)}
               >
                 <Info className="w-5 h-5 mr-2" />
                 More Info
-              </Button>
+              </EnhancedButton>
             )}
           </div>
         </div>

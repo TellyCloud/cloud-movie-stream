@@ -1,5 +1,5 @@
 import { Star, Play, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
 
 interface MovieCardProps {
   movie: any;
@@ -55,24 +55,24 @@ export function MovieCard({ movie, onClick, onPlay }: MovieCardProps) {
 
         {/* Action Buttons */}
         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <Button
+          <EnhancedButton
             size="sm"
-            variant="default"
+            variant="play"
             onClick={handlePlayClick}
             className="flex-1 h-8 text-xs"
           >
             <Play className="w-3 h-3 mr-1" />
             Play
-          </Button>
-          <Button
+          </EnhancedButton>
+          <EnhancedButton
             size="sm"
-            variant="outline"
+            variant="glass"
             onClick={handleCardClick}
             className="flex-1 h-8 text-xs"
           >
             <Info className="w-3 h-3 mr-1" />
             Details
-          </Button>
+          </EnhancedButton>
         </div>
       </div>
       

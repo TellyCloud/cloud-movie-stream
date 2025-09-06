@@ -1,10 +1,9 @@
-import { getApiBaseUrl } from './proxy';
 import { validateSearchQuery, validateId, validateYear, validateSortBy, sanitizeMovieData, RateLimiter } from '@/lib/security';
 import { env } from '@/lib/env';
 
 // Use environment variable for API key security
 const API_KEY = env.TMDB_API_KEY;
-const BASE_URL = getApiBaseUrl();
+const BASE_URL = 'https://api.themoviedb.org/3';
 
 // Rate limiter to prevent API abuse
 const rateLimiter = new RateLimiter(100, 60000);
@@ -44,8 +43,7 @@ class TMDBService {
       throw new Error('Rate limit exceeded. Please try again later.');
     }
 
-    const base = BASE_URL.startsWith('http') ? BASE_URL : `${window.location.origin}${BASE_URL}`;
-    const url = new URL(`${base}${endpoint}`);
+    const url = new URL(`${BASE_URL}${endpoint}`);
     url.searchParams.append('api_key', API_KEY);
     
     Object.entries(params).forEach(([key, value]) => {

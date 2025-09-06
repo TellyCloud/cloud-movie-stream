@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
 import { MovieCard } from './MovieCard';
 import { tmdbService, Movie } from '@/services/tmdb';
 import { Loader2, ChevronRight } from 'lucide-react';
@@ -55,10 +55,10 @@ export function MovieCategoryCard({
 
   // Auto-load more when scroll sentinel comes into view
   useEffect(() => {
-    if (inView && hasMore && !loading && currentPage > 1) {
+    if (inView && hasMore && !loading && movies.length > 0) {
       loadMovies(currentPage + 1, true);
     }
-  }, [inView, hasMore, loading, currentPage]);
+  }, [inView, hasMore, loading, currentPage, movies.length]);
 
   const loadMovies = async (page = 1, append = false) => {
     try {
@@ -158,14 +158,15 @@ export function MovieCategoryCard({
             {hasMore && (
               <div ref={ref} className="flex justify-center mt-8">
                 {!loading && (
-                  <Button
+                  <EnhancedButton
                     onClick={handleLoadMore}
-                    variant="outline"
-                    className="border-border/50 hover:border-primary/50 hover:bg-primary/10"
+                    variant="premium"
+                    size="lg"
+                    className="animate-pulse"
                   >
-                    Load More
+                    Load More Movies
                     <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
+                  </EnhancedButton>
                 )}
               </div>
             )}
