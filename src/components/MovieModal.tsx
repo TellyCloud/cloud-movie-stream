@@ -1,5 +1,5 @@
 import { X, Play, Star, Calendar, Globe } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 interface MovieModalProps {
@@ -21,14 +21,14 @@ export function MovieModal({ movie, isOpen, onClose, onPlay }: MovieModalProps) 
         </DialogHeader>
         <div className="relative">
           {/* Close Button */}
-          <Button
+          <EnhancedButton
             variant="ghost"
             size="icon"
             className="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 text-white"
             onClick={onClose}
           >
             <X className="w-5 h-5" />
-          </Button>
+          </EnhancedButton>
 
           {/* Hero Image */}
           <div className="relative h-64 md:h-80 overflow-hidden">
@@ -86,22 +86,23 @@ export function MovieModal({ movie, isOpen, onClose, onPlay }: MovieModalProps) 
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
-              <Button 
+              <EnhancedButton 
                 size="lg" 
-                className="btn-primary flex-1"
+                variant="play"
+                className="flex-1"
                 onClick={() => onPlay(movie)}
               >
                 <Play className="w-5 h-5 mr-2 fill-current" />
                 Watch Now
-              </Button>
+              </EnhancedButton>
               
-              <Button 
+              <EnhancedButton 
                 size="lg" 
-                variant="outline" 
-                className="border-border/50 hover:border-primary/50 hover:bg-primary/10"
+                variant="glass"
+                className="flex-1"
               >
                 Add to Watchlist
-              </Button>
+              </EnhancedButton>
             </div>
           </div>
         </div>

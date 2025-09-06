@@ -1,5 +1,5 @@
 import { MovieCard } from './MovieCard';
-import { Button } from '@/components/ui/button';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
 import { Loader2 } from 'lucide-react';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
@@ -62,14 +62,14 @@ export function MovieGrid({ movies, onMovieClick, onPlayMovie, onLoadMore, hasMo
         {hasMore && (
           <div ref={ref} className="flex justify-center mt-12 pb-8">
             {!loading && (
-              <Button
+              <EnhancedButton
                 onClick={onLoadMore}
                 size="lg"
-                variant="outline"
-                className="border-border/50 hover:border-primary/50 hover:bg-primary/10"
+                variant="premium"
+                className="animate-pulse"
               >
                 Load More Movies
-              </Button>
+              </EnhancedButton>
             )}
           </div>
         )}

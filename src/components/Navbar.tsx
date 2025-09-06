@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Search, Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
 import { Input } from '@/components/ui/input';
 
 interface NavbarProps {
@@ -84,14 +84,14 @@ export function Navbar({ onSearch, searchResults, onSelectMovie }: NavbarProps) 
           </div>
 
           {/* Mobile Menu Button */}
-          <Button
+          <EnhancedButton
             variant="ghost"
             size="icon"
             className="md:hidden"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
           >
             {showMobileMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </Button>
+          </EnhancedButton>
         </div>
 
         {/* Mobile Menu */}
