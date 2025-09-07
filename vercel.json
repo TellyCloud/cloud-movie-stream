@@ -2,24 +2,12 @@
   "version": 2,
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "headers": [
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=()"
-        },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
         {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://image.tmdb.org https://api.themoviedb.org; connect-src 'self' https://api.themoviedb.org; font-src 'self' data:; media-src 'self' blob: data: https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
@@ -27,27 +15,21 @@
       ]
     },
     {
-      "source": "/assets/(.*)",
+      "source": "/assets/:path*",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
-      "source": "/(.*\\.(js|css|woff|woff2|ttf|eot|ico|png|jpg|jpeg|gif|svg|webp))",
+      "source": "/:path*.(js|css|woff|woff2|ttf|eot|ico|png|jpg|jpeg|gif|svg|webp)",
       "headers": [
-        {
-          "key": "Cache-Control", 
-          "value": "public, max-age=31536000, immutable"
-        }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     }
   ],
   "rewrites": [
-    { "source": "/tmdb/(.*)", "destination": "https://api.themoviedb.org/3/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/tmdb/:path*", "destination": "https://api.themoviedb.org/3/:path*" },
+    { "source": "/:path*", "destination": "/index.html" }
   ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
