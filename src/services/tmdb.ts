@@ -38,9 +38,14 @@ export interface TMDBResponse<T> {
 class TMDBService {
   private async fetchFromTMDB<T>(endpoint: string, params: Record<string, any> = {}): Promise<T> {
     // Rate limiting check
-    const clientId = 'global'; // In a real app, this could be user-specific
+    const clientId = 'global';
     if (!rateLimiter.isAllowed(clientId)) {
       throw new Error('Rate limit exceeded. Please try again later.');
+    }
+
+    // Check if API key is available
+    if (!API_KEY) {
+      throw new Error('TMDB API key is not configured');
     }
 
     const url = new URL(`${BASE_URL}${endpoint}`);
@@ -52,22 +57,39 @@ class TMDBService {
       }
     });
 
-    const response = await fetch(url.toString());
-    if (!response.ok) {
-      throw new Error(`TMDB API error: ${response.status} ${response.statusText}`);
+    console.log('Fetching from TMDB:', url.toString().replace(API_KEY, '[API_KEY]'));
+
+    try {
+      const response = await fetch(url.toString(), {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('TMDB API Error:', response.status, response.statusText, errorText);
+        throw new Error(`TMDB API error: ${response.status} ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      console.log('TMDB Response received:', { endpoint, results: data.results?.length || 'single item' });
+      
+      // Sanitize movie data if the response contains movie results
+      if (data.results && Array.isArray(data.results)) {
+        data.results = data.results.map(sanitizeMovieData).filter(Boolean);
+      } else if (data.title || data.overview) {
+        // Single movie response
+        return sanitizeMovieData(data);
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Network error fetching from TMDB:', error);
+      throw error;
     }
-    
-    const data = await response.json();
-    
-    // Sanitize movie data if the response contains movie results
-    if (data.results && Array.isArray(data.results)) {
-      data.results = data.results.map(sanitizeMovieData).filter(Boolean);
-    } else if (data.title || data.overview) {
-      // Single movie response
-      return sanitizeMovieData(data);
-    }
-    
-    return data;
   }
 
   async getPopularMovies(page = 1): Promise<TMDBResponse<Movie>> {
